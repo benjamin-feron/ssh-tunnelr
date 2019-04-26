@@ -64,6 +64,7 @@ so result is :
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
 A single port can pe specified with -f option.
 
@@ -80,6 +81,7 @@ A single port can pe specified with -f option.
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
 ...and for specify ouput port with a single port :
 
@@ -96,6 +98,7 @@ A single port can pe specified with -f option.
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
 And option -f can be repeated multiples times :
 ````
@@ -114,4 +117,5 @@ And option -f can be repeated multiples times :
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
