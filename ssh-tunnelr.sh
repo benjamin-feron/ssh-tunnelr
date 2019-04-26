@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######################
-# ssh-tunnelr v1.0.2 #
+# ssh-tunnelr v1.0.4 #
 ######################
 
 DST_FIRST_PORT=40000
@@ -13,8 +13,7 @@ show_help () {
   echo "Options :"
   echo "  -u, --user           User to authenticate to servers"
   echo "  -h, --hosts          Single host or hosts list separate by ','"
-  echo "  -L, --forward-range  Port range to forward to end point"
-  echo "  -b, --bounce-port    First port number of internal bounces port ranges. Default value: 40000"
+  echo "  -L, --forward-range  Port range to forward to endpoint"
   echo "  --help               Show help"
   echo ""
   echo "example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004 -b 17000"
@@ -32,11 +31,7 @@ while :; do
 	  shift
 	  ;;
 	-L|--forward-range)
-	  SRC_PORTS_RANGE=${2}
-	  shift
-	  ;;
-	-b|--bounce-port)
-	  DST_FIRST_PORT=${2}
+	  PORTS_RANGE=${2}
 	  shift
 	  ;;
 	--help)
@@ -77,7 +72,7 @@ throw_error () {
 
 # unserialize data
 IFS=',' read -r -a HSTS <<< "$HOSTS"
-IFS=':' read -r -a SPR  <<< "$SRC_PORTS_RANGE"
+IFS=':' read -r -a PR   <<< "$PORTS_RANGE"
 
 # checks
 if [ "$USERNAME" = "" ]; then
@@ -86,16 +81,16 @@ fi
 if [ "$HOSTS" = "" ]; then
   throw_error "Please specify one host or more"
 fi
-if [ "$SRC_PORTS_RANGE" = "" ]; then
+if [ "$PORTS_RANGE" = "" ]; then
   throw_error "Please specify port range"
 fi
-if (( "${SPR[0]}" > "${SPR[1]}" )); then
+if (( "${PR[0]}" > "${PR[1]}" )); then
   throw_error "Source port must be less than end port"
 fi
-if (( "${SPR[0]}" < 1 )) || (( "${SPR[1]}" < 1 )) || (( "$DST_FIRST_PORT" < 1 )); then
+if (( "${PR[0]}" < 1 )) || (( "${PR[1]}" < 1 )); then
   throw_error "Port must be greater than 1"
 fi
-if (( "${SPR[0]}" > 65535 )) || (( "${SPR[1]}" > 65535 )) || (( "$DST_FIRST_PORT > 65535 ")); then
+if (( "${PR[0]}" > 65535 )) || (( "${PR[1]}" > 65535 )); then
   throw_error "Port must be less than 65535"
 fi
 
@@ -104,25 +99,17 @@ CMD=""
 for ((i=0; i<${#HSTS[@]}; ++i)); do
   CMD="$CMD\nssh -t $USERNAME@${HSTS[$i]}\n"
   if (( $i == 0 )); then
-	SRC_PORT="${SPR[0]}"
-	DST_PORT=$DST_FIRST_PORT
-  elif [[ "$(( i + 1 ))" -lt "${#HSTS[@]}" ]]; then
-	SRC_PORT=$DST_FIRST_PORT
-	DST_PORT=$DST_FIRST_PORT
-  else
-	SRC_PORT=$DST_FIRST_PORT
-	DST_PORT="${SPR[0]}"
+	PORT="${PR[0]}"
   fi
-  for ((j=${SPR[0]}; j<=${SPR[1]}; ++j)); do
-	CMD="$CMD-L $SRC_PORT:localhost:$DST_PORT\n"
-	((SRC_PORT++))
-	((DST_PORT++))
+  for ((j=${PR[0]}; j<=${PR[1]}; ++j)); do
+	CMD="$CMD-L $PORT:localhost:$PORT\n"
+	((PORT++))
   done
 done
 
 echo -e $CMD
 CMD="$(echo -e $CMD)"
-$CMD
+#$CMD
 
 #TODO:
 #- Corriger Port[s] must be greater than ...
