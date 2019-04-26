@@ -124,6 +124,6 @@ echo -e $CMD
 CMD="$(echo -e $CMD)"
 $CMD
 
-TODO:
-- Corriger Port[s] must be greater than ...
-- Prendre en charge des options ssh (-X, -t)
+#TODO:
+#- Corriger Port[s] must be greater than ...
+#- Prendre en charge des options ssh (-X, -t)
