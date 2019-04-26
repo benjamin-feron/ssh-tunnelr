@@ -6,7 +6,7 @@ ssh tunnels through multiple hosts until an end point.
 ## Usage
 
 ```bash
-ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -p 80:82
+ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -L 80:82
 ````
 This will bounce from host to host and forward local ports range up to the end point :
 ````

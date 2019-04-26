@@ -1,20 +1,20 @@
 #!/bin/bash
 
 ######################
-# ssh-tunnelr v1.0.1 #
+# ssh-tunnelr v1.0.2 #
 ######################
 
 DST_FIRST_PORT=40000
 QUIET=0
 
 show_help () {
-  echo "Usage: ssh-ranger [OPTIONS]"
+  echo "Usage: ssh-tunnelr [OPTIONS]"
   echo ""
   echo "Options :"
   echo "  -u, --user           User to authenticate to servers"
   echo "  -h, --hosts          Single host or hosts list separate by ','"
-  echo "  -p, --port-range     Port range to dig. In other words, port range to tunnel to end point."
-  echo "  -b, --bounce-port    First port number of internal bounces port ranges. Default value: 40000."
+  echo "  -L, --forward-range  Port range to forward to end point"
+  echo "  -b, --bounce-port    First port number of internal bounces port ranges. Default value: 40000"
   echo "  --help               Show help"
   echo ""
   echo "example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004 -b 17000"
@@ -31,7 +31,7 @@ while :; do
 	  HOSTS=${2}
 	  shift
 	  ;;
-	-p|--port-range)
+	-L|--forward-range)
 	  SRC_PORTS_RANGE=${2}
 	  shift
 	  ;;
