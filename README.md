@@ -1,6 +1,6 @@
 # ssh-tunnelr
 
-ssh-tunnelr is a bash script that offer you a simple way to make a range of
+ssh-tunnelr is a bash script that offer a simple way to make a range of
 ssh tunnels through multiple hosts until an end point.
 
 ## Usage
