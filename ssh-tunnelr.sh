@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######################
-# ssh-tunnelr v1.0.4 #
+# ssh-tunnelr v1.0.5 #
 ######################
 
 DST_FIRST_PORT=40000
@@ -13,10 +13,12 @@ show_help () {
   echo "Options :"
   echo "  -u, --user           User to authenticate to servers"
   echo "  -h, --hosts          Single host or hosts list separate by ','"
-  echo "  -f, --forward-range  Port range to forward to endpoint"
+  echo "  -f, --forward-range  Port range to forward to endpoint. You can specify simple port range e.g. 80:82."
+  echo "                       You also can specify output port range with a third port number e.g. 7000:7002:80."
+  echo "                       So port 7000 will be forwarded on port 80 of the endpoint, 7001 on 81 and 7002 on 82."
   echo "  --help               Show help"
   echo ""
-  echo "example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004 -b 17000"
+  echo "Example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004"
   echo ""
 }
 
@@ -38,16 +40,6 @@ while :; do
 	  show_help
   	  exit
 	  ;;
-#	-v|--verbose)
-#	  VERBOSE=$((verbose + 1))
-#	  ;;
-#	-q|--quiet)
-#	  QUIET=1
-#	  ;;
-#	--)
-#	  shift
-#	  break
-#	  ;;
 	-?*)
 	  printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
 	  ;;
@@ -56,6 +48,8 @@ while :; do
   esac
   shift
 done
+
+MAX_PORT_NUMBER=65535
 
 throw_error () {
   MSG=$1
@@ -87,30 +81,37 @@ fi
 if (( "${PR[0]}" > "${PR[1]}" )); then
   throw_error "Source port must be less than end port"
 fi
-if (( "${PR[0]}" < 1 )) || (( "${PR[1]}" < 1 )); then
-  throw_error "Port must be greater than 1"
+if (( "${PR[0]}" < 1 )) || (( "${PR[1]}" < 1 )) || (( "${#PR[@]}" == 3 )) && (( "${PR[2]}" < 1)); then
+#if (( "${PR[0]}" < 1 )) || (( "${PR[1]}" < 1 )); then
+  throw_error "Ports numbers  must be greater than 1"
 fi
-if (( "${PR[0]}" > 65535 )) || (( "${PR[1]}" > 65535 )); then
-  throw_error "Port must be less than 65535"
+if (( "${PR[0]}" > $MAX_PORT_NUMBER )) || (( "${PR[1]}" > $MAX_PORT_NUMBER )) || (( "${#PR[@]}" == 3 )) && (( "${PR[2]}" > $MAX_PORT_NUMBER )); then
+  throw_error "Ports numbers must be less than $MAX_PORT_NUMBER"
 fi
 
 CMD=""
 # for each host
 for ((i=0; i<${#HSTS[@]}; ++i)); do
   CMD="$CMD\nssh -t $USERNAME@${HSTS[$i]}\n"
-  if (( $i == 0 )); then
-	PORT="${PR[0]}"
-  fi
+  SRC_PORT="${PR[0]}"
+  DST_PORT="${PR[0]}"
+  CNT=0
+  # for each port in range
   for ((j=${PR[0]}; j<=${PR[1]}; ++j)); do
-	CMD="$CMD-L $PORT:localhost:$PORT\n"
-	((PORT++))
+  	# if output port is specified
+    if [[ "$(( i + 1 ))" -eq "${#HSTS[@]}" && "${#PR[@]}" -eq "3" ]]; then
+	  DST_PORT="$(( ${PR[2]} + $CNT ))"
+	fi
+	CMD="$CMD-L $SRC_PORT:localhost:$DST_PORT\n"
+	(( SRC_PORT++ ))
+	(( DST_PORT++ ))
+	(( CNT++ ))
   done
 done
 
 echo -e $CMD
 CMD="$(echo -e $CMD)"
-#$CMD
+$CMD
 
 #TODO:
-#- Corriger Port[s] must be greater than ...
 #- Prendre en charge des options ssh (-X, -t)
