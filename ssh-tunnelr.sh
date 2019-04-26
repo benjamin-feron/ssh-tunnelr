@@ -13,7 +13,7 @@ show_help () {
   echo "Options :"
   echo "  -u, --user           User to authenticate to servers"
   echo "  -h, --hosts          Single host or hosts list separate by ','"
-  echo "  -L, --forward-range  Port range to forward to endpoint"
+  echo "  -f, --forward-range  Port range to forward to endpoint"
   echo "  --help               Show help"
   echo ""
   echo "example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004 -b 17000"
@@ -30,7 +30,7 @@ while :; do
 	  HOSTS=${2}
 	  shift
 	  ;;
-	-L|--forward-range)
+	-f|--forward-range)
 	  PORTS_RANGE=${2}
 	  shift
 	  ;;
