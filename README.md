@@ -6,7 +6,7 @@ ssh tunnels through multiple hosts until an endpoint.
 ## Usage
 
 ```bash
-ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -L 80:82
+ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -f 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
@@ -48,4 +48,20 @@ $ ssh username@host.domain.com \
             -L 40000:localhost:80 \
             -L 40001:localhost:81 \
             -L 40002:localhost:82
+````
+It is possible to specify output ports range with -f option by specifying third port number.
+````
+-f 7000:7002:80
+````
+so result is :
+````
++----------+       +----------+       +----------+       +----------+
+|       22:|       |:22    22:|       |:22    22:|       |:22       |
+|    . - - - - - - - - -  - - - - - - - -  - - - - - - - -          |
+|   |  7000:-------:7000--7000:-------:7000--7000:-------:80        |
+|   |  7001:-------:7001--7001:-------:7001--7001:-------:81        |
+|   |  7002:-------:7002--7002:-------:7002--7002:-------:82        |
+|    ' - - - - - - - - -  - - - - - - - -  - - - - - - - -          |
+|          |       |          |       |          |       |          |
++----------+       +----------+       +----------+       +----------+
 ````
