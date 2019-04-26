@@ -38,16 +38,6 @@ while :; do
 	  show_help
   	  exit
 	  ;;
-#	-v|--verbose)
-#	  VERBOSE=$((verbose + 1))
-#	  ;;
-#	-q|--quiet)
-#	  QUIET=1
-#	  ;;
-#	--)
-#	  shift
-#	  break
-#	  ;;
 	-?*)
 	  printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
 	  ;;
@@ -101,6 +91,7 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
   if (( $i == 0 )); then
 	PORT="${PR[0]}"
   fi
+  # for each port in range
   for ((j=${PR[0]}; j<=${PR[1]}; ++j)); do
 	CMD="$CMD-L $PORT:localhost:$PORT\n"
 	((PORT++))
@@ -109,7 +100,7 @@ done
 
 echo -e $CMD
 CMD="$(echo -e $CMD)"
-#$CMD
+$CMD
 
 #TODO:
 #- Corriger Port[s] must be greater than ...
