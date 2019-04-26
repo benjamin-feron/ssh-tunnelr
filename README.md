@@ -37,15 +37,15 @@ This will bounce from host to host and forward local ports range up to the endpo
 Here is the command executed by the script :
 ```bash
 $ ssh username@host.domain.com \
-    -L 80:localhost:40000 \
-    -L 81:localhost:40001 \
-    -L 82:localhost:40002 \
+    -L 80:localhost:80 \
+    -L 81:localhost:81 \
+    -L 82:localhost:82 \
     ssh username@172.16.1.8 \
-        -L 40000:localhost:40000 \
-        -L 40001:localhost:40001 \
-        -L 40002:localhost:40002 \
+        -L 80:localhost:80 \
+        -L 81:localhost:81 \
+        -L 82:localhost:82 \
             ssh username@10.3.1.3 \
-            -L 40000:localhost:80 \
-            -L 40001:localhost:81 \
-            -L 40002:localhost:82
+            -L 80:localhost:80 \
+            -L 81:localhost:81 \
+            -L 82:localhost:82
 ````
