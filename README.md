@@ -171,6 +171,7 @@ ssh -p 2222 host1 \
  localhost             host1              host2              host3
                                      (username: foo)    (username: bar)
 ````
+You also can specify password like on ssh command : user:password@host but it's not recommended since commands are generally stored in history and could potentially be acceded by another user.
 
 ### Connect to the endpoint without forwarding ports
 
