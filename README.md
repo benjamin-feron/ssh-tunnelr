@@ -6,7 +6,7 @@ ssh tunnels through multiple hosts until an endpoint.
 ## Usage
 
 ```bash
-ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -f 80:82
+ssh-tunnelr.sh host.domain.com,172.16.1.8,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
@@ -49,9 +49,9 @@ $ ssh username@host.domain.com \
             -L 81:localhost:81 \
             -L 82:localhost:82
 ````
-It is possible to specify output ports range with -f option by specifying third port number.
+It is possible to specify output ports range by specifying third port number.
 ````
--f 7000:7002:80
+7000:7002:80
 ````
 so result is :
 ````
@@ -66,10 +66,10 @@ so result is :
 +-----------+       +-----------+       +-----------+       +-----------+
     host1               host2               host3               host4
 ````
-A single port can pe specified with -f option.
+A single port can pe specified :
 
 ````
--f 18000
+18000
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
@@ -86,7 +86,7 @@ A single port can pe specified with -f option.
 ...and for specify ouput port with a single port :
 
 ````
--f 18000:18000:3306
+18000:18000:3306
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
@@ -100,9 +100,9 @@ A single port can pe specified with -f option.
 +-----------+       +-----------+       +-----------+       +-----------+
     host1               host2               host3               host4
 ````
-And option -f can be specified multiples times :
+And several ranges are allowed :
 ````
--f 110:111 -f 7000:7002:80 -f 3306
+110:111 7000:7002:80 3306
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
