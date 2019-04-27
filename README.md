@@ -1,7 +1,7 @@
 # ssh-tunnelr
 
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
-through multiple hosts until an endpoint. It permit declaration of multiple TCP port ranges to forward.
+through multiple hosts to an endpoint. It permit declaration of multiple TCP port ranges to forward.
 
 ## Usage
 
