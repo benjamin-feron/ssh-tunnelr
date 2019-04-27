@@ -11,13 +11,13 @@ ssh-tunnelr host.domain.com,172.16.1.8,10.3.1.3 80:82
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
 +----------+       +----------+       +----------+       +----------+
-|   :80    |       |          |       |          |       |   :80    |
+|   :80    |       |          |       |          |       |    :80   |
 |       \  |       |          |       |          |       |  /       |
 |        \ |       |:22       |       |:22       |       | /        |
-|   :81  --===============================================-- :81    |
+|   :81 ---===============================================--- :81   |
 |        / |       |          |       |          |       | \        |
 |       /  |       |          |       |          |       |  \       |
-|   :82    |       |          |       |          |       |   :82    |
+|   :82    |       |          |       |          |       |    :82   |
 +----------+       +----------+       +----------+       +----------+
  localhost        host.domain.com      172.16.1.8          10.3.1.3
 ````
@@ -139,7 +139,7 @@ $ ssh-tunnelr host1,host2,host3 110:111 7000:7002:80 3306
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-### Specify username and/or ssh port number on each hosts
+#### Specify username and/or ssh port number on each hosts
 
 ```bash
 $ ssh-tunnelr host1:2222,foo@host2,bar@host3:6822 3306
@@ -164,6 +164,29 @@ ssh -p 2222 host1 \
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
                                      (username: foo)    (username: bar)
+````
+
+### Connect to endpoint without declare port forwarding
+Of course it's possible to simply connect to endpoint without specify any port to forward :
+```bash
+$ ssh-tunnelr host1:2222,host2,host3:6822
+````
+```bash
+ssh -p 2222 host1 \
+  ssh host2 \
+    ssh -p 6822 host3
+````
+````
++----------+       +----------+       +----------+       +----------+
+|          |       |          |       |          |       |          |
+|          |       |          |       |          |       |          |
+|          |       |          |       |          |       |          |
+|         ---------:2222--------------:22----------------:6822      |
+|          |       |          |       |          |       |          |
+|          |       |          |       |          |       |          |
+|          |       |          |       |          |       |          |
++----------+       +----------+       +----------+       +----------+
+ localhost             host1              host2              host3
 ````
 ### SSH natives options
 
