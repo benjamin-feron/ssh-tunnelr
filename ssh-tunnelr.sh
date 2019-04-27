@@ -89,7 +89,14 @@ fi
 CMD=""
 # for each host
 for ((i=0; i<${#HSTS[@]}; ++i)); do
-  CMD="$CMD\nssh $USERNAME@${HSTS[$i]}\n"
+  HST=${HSTS[$i]}
+  SSH_PORT=""
+  # if ssh port specified
+  if [[ "$HST" =~ ^(.*):([0-9]+)$ ]]; then
+    HST=${BASH_REMATCH[1]}
+    SSH_PORT="-p ${BASH_REMATCH[2]}"
+  fi
+  CMD="$CMD\nssh $SSH_PORT $USERNAME@$HST\n"
 
   # for each range in ports ranges
   for ((j=0; j<${#PRS[@]}; ++j)); do
@@ -141,3 +148,4 @@ fi
 
 #TODO:
 #- Prendre en charge des options ssh (-X, -t)
+#- username facultative
