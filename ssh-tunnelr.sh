@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ####################
-# ssh-tunnelr v1.3 #
+# ssh-tunnelr v1.4 #
 ####################
 
 DST_FIRST_PORT=40000
