@@ -1,8 +1,8 @@
 #!/bin/bash
 
-####################
-# ssh-tunnelr v2.2 #
-####################
+######################
+# ssh-tunnelr v2.2.1 #
+######################
 
 show_help () {
   echo "Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] [RANGE] [RANGE...]"
@@ -65,9 +65,7 @@ done
 throw_error () {
   MSG=$1
   EXIT=$2
-
   STD_MSG="Command stopped"
-
   printf "\033[0;31m$MSG\033[0m\n"
   echo "$STD_MSG"
   if $EXIT ; then
@@ -109,6 +107,7 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
   if [ "$XFORWARDING" -eq "1" ]; then
   	SSH_OPTIONS="$SSH_OPTIONS -X"
   fi
+
   CMD="$CMD\nssh $SSH_OPTIONS $SSH_PORT $SSH_USER$HST\n"
 
   # for each range in ports ranges
@@ -140,10 +139,13 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
 
 	# for each port in range
 	for ((k=${PR[0]}; k<=${PR[1]}; ++k)); do
+	  # checks
 	  if (( $SRC_PORT > $MAX_PORT_NUMBER )) || (( $DST_PORT > $MAX_PORT_NUMBER )); then
 		throw_error "Ports numbers  must be less than $MAX_PORT_NUMBER - $DST_PORT"
 	  fi
+
 	  CMD="$CMD-L $SRC_PORT:localhost:$DST_PORT\n"
+
 	  (( SRC_PORT++ ))
 	  (( DST_PORT++ ))
     done
@@ -156,6 +158,3 @@ if [ "$DRY_MODE" -eq "0" ]; then
   $CMD
 fi
 
-#TODO:
-#- Prendre en charge des options ssh (-X, -t)
-#- username facultative
