@@ -18,6 +18,7 @@ show_help () {
     -d, --dry            Dry mode, for test. With this option, ssh command is not launched, it's only shown.
     -h, --hide-tunnels   Don't show tunnels in command output. Especially useful when you need large range of ports
                          and your screen is too small.
+    -q, --quiet          Quiet mode. Display no output.
     --help               Show help
   
   SSH Options:           These options are passed to each ssh command on each host.
@@ -31,6 +32,7 @@ XFORWARDING=0
 PTERMALLOC=0
 DRY_MODE=0
 HIDE_TUNNELS=0
+QUIET=0
 MAX_PORT_NUMBER=65535
 
 while :; do
@@ -46,6 +48,9 @@ while :; do
 	  ;;
 	-h|--hide-tunnels)
 	  HIDE_TUNNELS=1
+	  ;;
+	-q|--quiet)
+	  QUIET=1
 	  ;;
 	--help)
 	  show_help
@@ -169,7 +174,10 @@ if [ "$HIDE_TUNNELS" -eq "1" ]; then
   OUTPUT_CMD="$OUTPUT_CMD| grep -v '\-L\\s'"
 fi
 
-eval $OUTPUT_CMD
+# show output
+if [ "$QUIET" -eq "0" ]; then
+  eval $OUTPUT_CMD
+fi
 
 CMD="$(echo -e $CMD)"
 if [ "$DRY_MODE" -eq "0" ]; then
