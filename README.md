@@ -1,12 +1,12 @@
 # ssh-tunnelr
 
-ssh-tunnelr is a bash script that offer a simple way to forward range of
-TCP ports through multiple hosts until an endpoint.
+ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
+through multiple hosts until an endpoint. It permit declaration of multiple TCP port range to forward.
 
 ## Usage
 
 ```bash
-ssh-tunnelr host.domain.com,172.16.1.8,10.3.1.3 80:82
+ssh-tunnelr host.domain.com,172.16.1.55,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
@@ -19,7 +19,7 @@ This will bounce from host to host and forward local ports range up to the endpo
 |       /  |       |          |       |          |       |  \       |
 |   :82    |       |          |       |          |       |    :82   |
 +----------+       +----------+       +----------+       +----------+
- localhost        host.domain.com      172.16.1.8          10.3.1.3
+ localhost        host.domain.com      172.16.1.55         10.3.1.3
 ````
 ...or more precisely :
 ````
@@ -32,7 +32,7 @@ This will bounce from host to host and forward local ports range up to the endpo
 |    ` - - - - - - - - - - - - - - - - - - - - - - - - - -          |
 |          |       |          |       |          |       |          |
 +----------+       +----------+       +----------+       +----------+
- localhost        host.domain.com      172.16.1.8          10.3.1.3
+ localhost        host.domain.com      172.16.1.55         10.3.1.3
 ````
 Here is the command executed by the script :
 ```bash
@@ -40,7 +40,7 @@ ssh host.domain.com \
   -L 80:localhost:80 \
   -L 81:localhost:81 \
   -L 82:localhost:82 \
-  ssh 172.16.1.8 \
+  ssh 172.16.1.55 \
     -L 80:localhost:80 \
     -L 81:localhost:81 \
     -L 82:localhost:82 \
@@ -49,9 +49,9 @@ ssh host.domain.com \
       -L 81:localhost:81 \
       -L 82:localhost:82
 ````
-### Ranges definition
+### Declaration of ports to forward
 
-#### Simple port range
+#### Port range forwarding
 ```bash
 $ ssh-tunnelr host1,host2,host3 7000:7002
 ````
@@ -68,11 +68,11 @@ so result is :
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-#### Simple port range with destination ports specified
+#### Port range forwarding with destination ports specified
 ```bash
 $ ssh-tunnelr host1,host2,host3 7000:7002:80
 ````
-look at ports on endpoint :
+look at ports on the endpoint :
 ````
 +----------+       +----------+       +----------+       +----------+
 |          |       |:22       |       |:22       |       |:22       |
@@ -85,7 +85,7 @@ look at ports on endpoint :
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-#### Single port
+#### Single port forwarding
 
 ```bash
 $ ssh-tunnelr host1,host2,host3 18000
@@ -102,7 +102,7 @@ $ ssh-tunnelr host1,host2,host3 18000
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-#### Single port with destination port specified
+#### Single port forwarding with destination port specified
 
 ```bash
 $ ssh-tunnelr host1,host2,host3 18000:18000:3306
@@ -119,8 +119,9 @@ $ ssh-tunnelr host1,host2,host3 18000:18000:3306
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-#### Several ranges
-You can combine several range types :
+#### Combine multiple types of forwarding
+
+You can combine several types of declarations :
 ```bash
 $ ssh-tunnelr host1,host2,host3 110:111 7000:7002:80 3306
 ````
@@ -139,7 +140,8 @@ $ ssh-tunnelr host1,host2,host3 110:111 7000:7002:80 3306
 +----------+       +----------+       +----------+       +----------+
  localhost             host1              host2              host3
 ````
-#### Specify username and/or ssh port number on each hosts
+
+#### Specify username and/or ssh server port number on each hosts
 
 ```bash
 $ ssh-tunnelr host1:2222,foo@host2,bar@host3:6822 3306
@@ -166,7 +168,8 @@ ssh -p 2222 host1 \
                                      (username: foo)    (username: bar)
 ````
 
-### Connect to endpoint without declare port forwarding
+### Connect to the endpoint without forwarding ports
+
 Of course it's possible to simply connect to endpoint without specify any port to forward :
 ```bash
 $ ssh-tunnelr host1:2222,host2,host3:6822
