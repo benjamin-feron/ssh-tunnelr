@@ -3,10 +3,16 @@
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint. It permit declaration of multiple TCP port ranges to forward.
 
+## Installation
+```bash
+$ git clone https://github.com/benjamin-feron/ssh-tunnelr.git
+````
+
 ## Usage
 
 ```bash
-ssh-tunnelr host.domain.com,172.16.1.55,10.3.1.3 80:82
+$ cd ssh-tunneler
+$ ssh-tunnelr.sh host.domain.com,172.16.1.55,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
