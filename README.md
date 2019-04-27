@@ -6,7 +6,7 @@ ssh tunnels through multiple hosts until an endpoint.
 ## Usage
 
 ```bash
-ssh-tunnelr.sh -u username -h host.domain.com,172.16.1.8,10.3.1.3 -f 80:82
+ssh-tunnelr.sh host.domain.com,172.16.1.8,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
@@ -37,21 +37,21 @@ This will bounce from host to host and forward local ports range up to the endpo
 Here is the command executed by the script :
 ```bash
 $ ssh username@host.domain.com \
-    -L 80:localhost:40000 \
-    -L 81:localhost:40001 \
-    -L 82:localhost:40002 \
+    -L 80:localhost:80 \
+    -L 81:localhost:81 \
+    -L 82:localhost:82 \
     ssh username@172.16.1.8 \
-        -L 40000:localhost:40000 \
-        -L 40001:localhost:40001 \
-        -L 40002:localhost:40002 \
+        -L 80:localhost:80 \
+        -L 81:localhost:81 \
+        -L 82:localhost:82 \
             ssh username@10.3.1.3 \
-            -L 40000:localhost:80 \
-            -L 40001:localhost:81 \
-            -L 40002:localhost:82
+            -L 80:localhost:80 \
+            -L 81:localhost:81 \
+            -L 82:localhost:82
 ````
-It is possible to specify output ports range with -f option by specifying third port number.
+It is possible to specify output ports range by specifying third port number.
 ````
--f 7000:7002:80
+7000:7002:80
 ````
 so result is :
 ````
@@ -64,27 +64,29 @@ so result is :
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
-A single port can pe specified with -f option.
+A single port can pe specified :
 
 ````
--f 3306
+18000
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
 |        22:|       |:22     22:|       |:22     22:|       |:22        |
 |     . - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |    |      :       :           :       :           :       :           |
-|    |  3306:-------:3306---3306:-------:3306---3306:-------:3306       |
+|    | 18000:-------:18000-18000:-------:18000-18000:-------:18000      |
 |    |      :       :           :       :           :       :           |
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
 ...and for specify ouput port with a single port :
 
 ````
--f 18000:18000:3306
+18000:18000:3306
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
@@ -96,10 +98,11 @@ A single port can pe specified with -f option.
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
-And option -f can be repeated multiples times :
+And several ranges are allowed :
 ````
--f 110:111 -f 7000:7002:80 -f 3306
+110:111 7000:7002:80 3306
 ````
 ````
 +-----------+       +-----------+       +-----------+       +-----------+
@@ -114,4 +117,5 @@ And option -f can be repeated multiples times :
 |     ' - - - - - - - - - - - - - - - - - - - - - - - - - - -           |
 |           |       |           |       |           |       |           |
 +-----------+       +-----------+       +-----------+       +-----------+
+    host1               host2               host3               host4
 ````
