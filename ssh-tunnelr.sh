@@ -1,14 +1,16 @@
 #!/bin/bash
 
 ####################
-# ssh-tunnelr v1.4 #
+# ssh-tunnelr v2.1 #
 ####################
 
-DST_FIRST_PORT=40000
+XFORWARDING=0
+PTERMALLOC=0
+
 DRY_MODE=0
 
 show_help () {
-  echo "Usage: ssh-tunnelr [OPTIONS] HOST[S] RANGE [RANGE...]"
+  echo "Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] RANGE [RANGE...]"
   echo ""
   echo "Hosts:                 Hosts separate by ',' e.g. host.domain.com,172.16.1.8,user@10.1.8.1:2222"
   echo "                       An host is defined by [user@]host[:ssh_port] where user and ssh_port are optional"
@@ -21,12 +23,22 @@ show_help () {
   echo "  -d, --dry            Dry mode, for test. With this option, ssh command is not launched, it's only shown."
   echo "  --help               Show help"
   echo ""
+  echo "SSH Options:           These options are passed to each ssh command on each host."
+  echo "  -t                   Force pseudo-terminal allocation."
+  echo "  -X                   Enables X11 forwarding."
+  echo ""
   echo "Example:               ssh-tunnelr foo@host.domain.com,172.16.1.11,bar@10.5.1.10:2222 7000:7008"
   echo ""
 }
 
 while :; do
   case $1 in
+	-t)
+	  PTERMALLOC=1
+	  ;;
+	-X)
+	  XFORWARDING=1
+	  ;;
 	-d|--dry)
 	  DRY_MODE=1
 	  ;;
@@ -49,9 +61,6 @@ shift
 for arg in "$@"; do
   RANGES="$RANGES $arg"
 done
-
-echo $HOSTS
-echo $RANGES
 
 MAX_PORT_NUMBER=65535
 
@@ -97,7 +106,15 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
     HST=${BASH_REMATCH[1]}
     SSH_PORT="-p ${BASH_REMATCH[2]}"
   fi
-  CMD="$CMD\nssh $SSH_PORT $SSH_USER$HST\n"
+  # ssh native options
+  SSH_OPTIONS=""
+  if [ "$PTERMALLOC" -eq "1" ]; then
+  	SSH_OPTIONS="$SSH_OPTIONS -t"
+  fi
+  if [ "$XFORWARDING" -eq "1" ]; then
+  	SSH_OPTIONS="$SSH_OPTIONS -X"
+  fi
+  CMD="$CMD\nssh $SSH_OPTIONS $SSH_PORT $SSH_USER$HST\n"
 
   # for each range in ports ranges
   for ((j=0; j<${#PRS[@]}; ++j)); do
@@ -108,9 +125,6 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
     if (( "${#PR[@]}" == 1 )); then
       PR[1]=${PR[0]}
       PR[2]=${PR[0]}
-    # if simple range port specified
-    #elif (( "${#PR[@]}" == 2 )); then
-      #PR[2]=${PR[1]}
     fi
 
     SRC_PORT=${PR[0]}
