@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######################
-# ssh-tunnelr v2.2.1 #
+# ssh-tunnelr v2.2.2 #
 ######################
 
 show_help () {
@@ -116,10 +116,13 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
     IFS=':' read -r -a PR <<< "${PRS[$j]}"
 
     # if single port specified
-    if (( "${#PR[@]}" == 1 )); then
+	if (( "${#PR[@]}" == 1 )); then
       PR[1]=${PR[0]}
       PR[2]=${PR[0]}
-    fi
+    # single port with out port specified shortcut e.g. 6000::9000
+    elif (( "${#PR[@]}" == 3 )) && [[ "${PR[1]}" -eq "" ]]; then
+      PR[1]=${PR[0]}
+	fi
 
     SRC_PORT=${PR[0]}
     DST_PORT=${PR[0]}
