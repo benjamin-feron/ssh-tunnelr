@@ -105,6 +105,10 @@ $ ssh-tunnelr host1,host2,host3 18000
 #### Single port forwarding with destination port specified
 
 ```bash
+$ ssh-tunnelr host1,host2,host3 18000::3306
+````
+...that is equivalent to :
+```bash
 $ ssh-tunnelr host1,host2,host3 18000:18000:3306
 ````
 ````
