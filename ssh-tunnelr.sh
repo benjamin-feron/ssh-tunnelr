@@ -1,16 +1,11 @@
 #!/bin/bash
 
 ####################
-# ssh-tunnelr v2.1 #
+# ssh-tunnelr v2.2 #
 ####################
 
-XFORWARDING=0
-PTERMALLOC=0
-
-DRY_MODE=0
-
 show_help () {
-  echo "Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] RANGE [RANGE...]"
+  echo "Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] [RANGE] [RANGE...]"
   echo ""
   echo "Hosts:                 Hosts separate by ',' e.g. host.domain.com,172.16.1.8,user@10.1.8.1:2222"
   echo "                       An host is defined by [user@]host[:ssh_port] where user and ssh_port are optional"
@@ -30,6 +25,11 @@ show_help () {
   echo "Example:               ssh-tunnelr foo@host.domain.com,172.16.1.11,bar@10.5.1.10:2222 7000:7008"
   echo ""
 }
+
+XFORWARDING=0
+PTERMALLOC=0
+DRY_MODE=0
+MAX_PORT_NUMBER=65535
 
 while :; do
   case $1 in
@@ -62,8 +62,6 @@ for arg in "$@"; do
   RANGES="$RANGES $arg"
 done
 
-MAX_PORT_NUMBER=65535
-
 throw_error () {
   MSG=$1
   EXIT=$2
@@ -84,9 +82,6 @@ IFS=' ' read -r -a PRS  <<< "$RANGES"
 # checks
 if (( "${#HSTS[@]}" == 0 )); then
   throw_error "Please specify at least one host"
-fi
-if (( "${#PRS[@]}" == 0 )); then
-  throw_error "Please specify at least one port range"
 fi
 
 # construct ssh command
