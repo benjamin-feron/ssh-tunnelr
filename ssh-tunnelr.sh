@@ -1,46 +1,34 @@
 #!/bin/bash
 
 ####################
-# ssh-tunnelr v1.3 #
+# ssh-tunnelr v1.4 #
 ####################
 
 DST_FIRST_PORT=40000
 DRY_MODE=0
 
 show_help () {
-  echo "Usage: ssh-tunnelr [OPTIONS]"
+  echo "Usage: ssh-tunnelr [OPTIONS] HOST[S] RANGE [RANGE...]"
   echo ""
-  echo "Options :"
-  echo "  -u, --user           User to authenticate to servers"
-  echo "  -h, --hosts          Single host or hosts list separate by ','"
-  echo "  -f, --forward        Single port or range to forward to endpoint. You can specify simple port range e.g. 80:82."
+  echo "Hosts:                 Hosts separate by ',' e.g. host.domain.com,172.16.1.8,user@10.1.8.1:2222"
+  echo "                       An host is defined by [user@]host[:ssh_port] where user and ssh_port are optional"
+  echo "Range(s)               Ports to forward to endpoint. This can be a single port e.g. 80 or a range e.g. 80:82."
   echo "                       You also can specify output port range with a third port number e.g. 7000:7002:80."
   echo "                       So port 7000 will be forwarded on port 80 of the endpoint, 7001 on 81 and 7002 on 82."
-  echo "                       This option can be repeated multiples times e.g -f 110:118 -f 7000:7002:80 -f 3306."
+  echo "                       For single port combined with output port scpecified, you have to write 7000:7000:80."
+  echo "                       Several ranges are allowed and must be separated by spaces  e.g 10000:10008 7000:7002:80 3306."
+  echo "Options:"
   echo "  -d, --dry            Dry mode, for test. With this option, ssh command is not launched, it's only shown."
   echo "  --help               Show help"
   echo ""
-  echo "Example:               ssh-ranger -u username -h host.domain.com,172.16.1.11,10.5.1.10 -p 20000:20004"
+  echo "Example:               ssh-tunnelr foo@host.domain.com,172.16.1.11,bar@10.5.1.10:2222 7000:7008"
   echo ""
 }
 
 while :; do
   case $1 in
-	-u|--user)
-	  USERNAME=${2}
-	  shift
-	  ;;
-	-h|--host)
-	  HOSTS=${2}
-	  shift
-	  ;;
-	-f|--forward)
-	  PORTS_RANGE="$PORTS_RANGE ${2}"
-	  shift
-	  ;;
 	-d|--dry)
 	  DRY_MODE=1
-	  shift
 	  ;;
 	--help)
 	  show_help
@@ -54,6 +42,16 @@ while :; do
   esac
   shift
 done
+
+HOSTS="$1"
+shift
+
+for arg in "$@"; do
+  RANGES="$RANGES $arg"
+done
+
+echo $HOSTS
+echo $RANGES
 
 MAX_PORT_NUMBER=65535
 
@@ -72,24 +70,34 @@ throw_error () {
 
 # unserialize data
 IFS=',' read -r -a HSTS <<< "$HOSTS"
-IFS=' ' read -r -a PRS  <<< "$PORTS_RANGE"
+IFS=' ' read -r -a PRS  <<< "$RANGES"
 
 # checks
-if [ "$USERNAME" = "" ]; then
-  throw_error "Please specify username"
+if (( "${#HSTS[@]}" == 0 )); then
+  throw_error "Please specify at least one host"
 fi
-if [ "$HOSTS" = "" ]; then
-  throw_error "Please specify one host or more"
-fi
-if [ "$PORTS_RANGE" = "" ]; then
-  throw_error "Please specify port range"
+if (( "${#PRS[@]}" == 0 )); then
+  throw_error "Please specify at least one port range"
 fi
 
 # construct ssh command
 CMD=""
 # for each host
 for ((i=0; i<${#HSTS[@]}; ++i)); do
-  CMD="$CMD\nssh $USERNAME@${HSTS[$i]}\n"
+  HST=${HSTS[$i]}
+  SSH_USER=""
+  SSH_PORT=""
+  # if ssh user specified
+  if [[ "$HST" =~ ^(.+)@(.+)$ ]]; then
+    SSH_USER="${BASH_REMATCH[1]}@"
+    HST=${BASH_REMATCH[2]}
+  fi
+  # if ssh port specified
+  if [[ "$HST" =~ ^(.+):([0-9]+)$ ]]; then
+    HST=${BASH_REMATCH[1]}
+    SSH_PORT="-p ${BASH_REMATCH[2]}"
+  fi
+  CMD="$CMD\nssh $SSH_PORT $SSH_USER$HST\n"
 
   # for each range in ports ranges
   for ((j=0; j<${#PRS[@]}; ++j)); do
@@ -141,3 +149,4 @@ fi
 
 #TODO:
 #- Prendre en charge des options ssh (-X, -t)
+#- username facultative
