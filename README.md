@@ -100,7 +100,7 @@ A single port can pe specified with -f option.
 +-----------+       +-----------+       +-----------+       +-----------+
     host1               host2               host3               host4
 ````
-And option -f can be repeated multiples times :
+And option -f can be specified multiples times :
 ````
 -f 110:111 -f 7000:7002:80 -f 3306
 ````
