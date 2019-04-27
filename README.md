@@ -6,13 +6,14 @@ through multiple hosts to an endpoint. It permit declaration of multiple TCP por
 ## Installation
 ```bash
 $ git clone https://github.com/benjamin-feron/ssh-tunnelr.git
+$ cd ssh-tunnelr
+$ ln -s $PWD/ssh-tunnelr.sh /usr/bin/ssh-tunnelr
 ````
 
 ## Usage
 
 ```bash
-$ cd ssh-tunnelr
-$ ssh-tunnelr.sh host.domain.com,172.16.1.55,10.3.1.3 80:82
+$ ssh-tunnelr host.domain.com,172.16.1.55,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
