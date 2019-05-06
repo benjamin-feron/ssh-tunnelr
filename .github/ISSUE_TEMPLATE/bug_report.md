@@ -21,7 +21,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Informations:**
- - OS: [e.g. Debian]
+ - OS: [e.g. Debian Stretch]
  - Version [e.g. v2.4]
 
 **Additional context**
