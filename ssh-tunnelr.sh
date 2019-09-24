@@ -1,8 +1,8 @@
 #!/bin/bash
 
-####################
-# ssh-tunnelr v2.4 #
-####################
+######################
+# ssh-tunnelr v2.4.1 #
+######################
 
 show_help () {
   echo "Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] [RANGE] [RANGE...]
