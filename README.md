@@ -13,7 +13,7 @@ $ ln -s $PWD/ssh-tunnelr.sh /usr/bin/ssh-tunnelr
 ## Usage
 
 ```bash
-$ ssh-tunnelr host.domain.com,172.16.1.55,10.3.1.3 80:82
+$ ssh-tunnelr -t host.domain.com,172.16.1.55,10.3.1.3 80:82
 ````
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
@@ -43,24 +43,26 @@ This will bounce from host to host and forward local ports range up to the endpo
 ````
 Here is the command executed by the script :
 ```bash
-ssh host.domain.com \
+ssh -t host.domain.com \
   -L 80:localhost:80 \
   -L 81:localhost:81 \
   -L 82:localhost:82 \
-  ssh 172.16.1.55 \
+  ssh -t 172.16.1.55 \
     -L 80:localhost:80 \
     -L 81:localhost:81 \
     -L 82:localhost:82 \
-    ssh 10.3.1.3 \
+    ssh -t 10.3.1.3 \
       -L 80:localhost:80 \
       -L 81:localhost:81 \
       -L 82:localhost:82
 ````
+-t options is to force pseudo-terminal allocation. It is often required for the different shell to open well.
+
 ### Declaration of ports to forward
 
 #### Port range forwarding
 ```bash
-$ ssh-tunnelr host1,host2,host3 7000:7002
+$ ssh-tunnelr -t host1,host2,host3 7000:7002
 ````
 so result is :
 ````
@@ -77,7 +79,7 @@ so result is :
 ````
 #### Port range forwarding with destination ports specified
 ```bash
-$ ssh-tunnelr host1,host2,host3 7000:7002:80
+$ ssh-tunnelr -t host1,host2,host3 7000:7002:80
 ````
 look at ports on the endpoint :
 ````
@@ -95,7 +97,7 @@ look at ports on the endpoint :
 #### Single port forwarding
 
 ```bash
-$ ssh-tunnelr host1,host2,host3 18000
+$ ssh-tunnelr -t host1,host2,host3 18000
 ````
 ````
 +----------+       +----------+       +----------+       +----------+
@@ -112,11 +114,11 @@ $ ssh-tunnelr host1,host2,host3 18000
 #### Single port forwarding with destination port specified
 
 ```bash
-$ ssh-tunnelr host1,host2,host3 18000::3306
+$ ssh-tunnelr -t host1,host2,host3 18000::3306
 ````
 ...that is equivalent to :
 ```bash
-$ ssh-tunnelr host1,host2,host3 18000:18000:3306
+$ ssh-tunnelr -t host1,host2,host3 18000:18000:3306
 ````
 ````
 +----------+       +----------+       +----------+       +----------+
@@ -134,7 +136,7 @@ $ ssh-tunnelr host1,host2,host3 18000:18000:3306
 
 You can combine several types of declarations :
 ```bash
-$ ssh-tunnelr host1,host2,host3 110:111 7000:7002:80 3306
+$ ssh-tunnelr -t host1,host2,host3 110:111 7000:7002:80 3306
 ````
 ````
 +----------+       +----------+       +----------+       +----------+
@@ -155,14 +157,14 @@ $ ssh-tunnelr host1,host2,host3 110:111 7000:7002:80 3306
 #### Specify username and/or ssh server port number on each hosts
 
 ```bash
-$ ssh-tunnelr host1:2222,foo@host2,bar@host3:6822 3306
+$ ssh-tunnelr -t host1:2222,foo@host2,bar@host3:6822 3306
 ````
 ```bash
-ssh -p 2222 host1 \
+ssh -t -p 2222 host1 \
   -L 3306:localhost:3306 \
-  ssh foo@host2 \
+  ssh -t foo@host2 \
     -L 3306:localhost:3306 \
-    ssh -p 6822 bar@host3 \
+    ssh -t -p 6822 bar@host3 \
       -L 3306:localhost:3306
 ````
 ````
@@ -184,12 +186,12 @@ You also can specify password like on ssh command : user:password@host but it's 
 
 Of course it's possible to simply connect to endpoint without specify any port to forward :
 ```bash
-$ ssh-tunnelr host1:2222,host2,host3:6822
+$ ssh-tunnelr -t host1:2222,host2,host3:6822
 ````
 ```bash
-ssh -p 2222 host1 \
+ssh -t -p 2222 host1 \
   ssh host2 \
-    ssh -p 6822 host3
+    ssh -t -p 6822 host3
 ````
 ````
 +----------+       +----------+       +----------+       +----------+
