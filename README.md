@@ -233,3 +233,29 @@ ssh -X -t host1 \
       -L 70:localhost:70 \
       -L 71:localhost:71
 ````
+
+### All options
+
+```
+Usage: ssh-tunnelr [OPTIONS|SSH OPTIONS] HOST[S] [RANGE] [RANGE...]
+
+  Hosts:                 Hosts separate by ',' e.g. host.domain.com,172.16.1.8,user@10.1.8.1:2222
+                         An host is defined by [user@]host[:ssh_port] where user and ssh_port are optional
+  Range(s)               Ports to forward to endpoint. This can be a single port e.g. 80 or a range e.g. 80:82.
+                         You also can specify output port range with a third port number e.g. 7000:7002:80.
+                         So port 7000 will be forwarded on port 80 of the endpoint, 7001 on 81 and 7002 on 82.
+                         For single port combined with output port scpecified, you have to write 7000:7000:80.
+                         Several ranges are allowed and must be separated by spaces  e.g 10000:10008 7000:7002:80 3306.
+  Options:
+    -d, --dry            Dry mode, for test. With this option, ssh command is not launched, it's only shown.
+    -h, --hide-tunnels   Don't show tunnels in command output. Especially useful when you need large range of ports
+                         and your screen is too small.
+    -q, --quiet          Quiet mode. Display no output.
+    --help               Show help
+  
+  SSH Options:           These options are passed to each ssh command on each host.
+    -t                   Force pseudo-terminal allocation.
+    -X                   Enables X11 forwarding.
+  
+  Example:               ssh-tunnelr foo@host.domain.com,172.16.1.11,bar@10.5.1.10:2222 7000:7008
+````
