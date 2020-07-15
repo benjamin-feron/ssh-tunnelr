@@ -3,6 +3,14 @@
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint. It permit declaration of multiple TCP port ranges to forward.
 
+## Home page
+
+[https://benjamin-feron.github.io/ssh-tunnelr/](https://benjamin-feron.github.io/ssh-tunnelr/)
+
+## Repository
+
+[https://github.com/benjamin-feron/ssh-tunnelr](https://github.com/benjamin-feron/ssh-tunnelr)
+
 ## Installation
 ```bash
 $ git clone https://github.com/benjamin-feron/ssh-tunnelr.git
