@@ -7,7 +7,7 @@ It permit declaration of multiple TCP port ranges to forward.
 
 ## Home page
 
-[https://benjamin-feron.github.io/ssh-tunnelr/](https://benjamin-feron.github.io/ssh-tunnelr/)
+[https://benjamin-feron.github.io/ssh-tunnelr](https://benjamin-feron.github.io/ssh-tunnelr)
 
 ## Repository
 
