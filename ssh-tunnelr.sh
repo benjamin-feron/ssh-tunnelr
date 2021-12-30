@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######################
-# ssh-tunnelr v2.4.1 #
+# ssh-tunnelr v2.4.2 #
 ######################
 
 show_help () {
