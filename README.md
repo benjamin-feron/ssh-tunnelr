@@ -194,7 +194,7 @@ You also can specify password like on ssh command : user:password@host but it's 
 
 ### Connect to the endpoint without forwarding ports
 
-Of course it's possible to simply connect to endpoint without specify any port to forward :
+Of course it's possible to simply connect to endpoint without specifying any port to forward :
 ```bash
 $ ssh-tunnelr -t host1:2222,host2,host3:6822
 ````
