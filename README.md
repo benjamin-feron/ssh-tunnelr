@@ -1,4 +1,4 @@
-# ![logo](https://github.com/benjamin-feron/ssh-tunnelr/raw/main/images/ssh-tunnelr-logo.png "docker-tags logo")
+# ![logo](https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo.png "ssh-tunnelr logo")
 
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint.
