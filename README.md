@@ -1,4 +1,4 @@
-# <img src="https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo-small-black-rock.png" width="200" />
+# <img src="https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo-small-black-rock.png" width="350" />
 
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint.
