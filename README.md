@@ -1,4 +1,4 @@
-# ![logo](https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo.png "ssh-tunnelr logo")
+# <img src="https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo.png" alt="ssh-tunnelr logo" width="215"/>
 
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint.
