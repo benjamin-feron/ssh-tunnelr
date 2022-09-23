@@ -51,7 +51,7 @@ This will bounce from host to host and forward local ports range up to the endpo
 +----------+       +----------+       +----------+       +----------+
  localhost        host.domain.com      172.16.1.55         10.3.1.3
 ````
-Here is the command executed by the script :
+Here is the background command executed by the script :
 ```bash
 ssh -t host.domain.com \
   -L 80:localhost:80 \
