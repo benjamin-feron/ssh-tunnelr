@@ -222,7 +222,7 @@ You can pass ssh native options like -X or -t.
 ```bash
 $ ssh-tunnelr -X -t host1,host2,host3 70:71
 ````
-...ssh command becomes :
+...ssh equivalent command :
 ```bash
 ssh -X -t host1 \
   -L 70:localhost:70 \
