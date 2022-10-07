@@ -166,6 +166,7 @@ $ ssh-tunnelr -t host1,host2,host3 110:111 7000:7002:80 3306
 
 #### Specify username and/or ssh server port number on each hosts
 
+Is equivalent to :
 ```bash
 $ ssh-tunnelr -t host1:2222,foo@host2,bar@host3:6822 3306
 ````
