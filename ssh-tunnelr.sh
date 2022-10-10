@@ -76,7 +76,7 @@ throw_error () {
   MSG=$1
   EXIT=$2
   STD_MSG="Command stopped"
-  printf "\033[0;31m$MSG\033[0m\n"
+  printf "\033[0;31m%s\033[0m\n" "${MSG}"
   echo "$STD_MSG"
   if $EXIT ; then
     exit 1
@@ -143,17 +143,17 @@ for ((i=0; i<${#HSTS[@]}; ++i)); do
     fi
 
     # checks
-    if (( $SRC_PORT < 1 )) || (( $DST_PORT < 1 )); then
+    if (( SRC_PORT < 1 )) || (( DST_PORT < 1 )); then
       throw_error "Ports numbers  must be greater than 1"
     fi
-    if (( ${PR[0]} > ${PR[1]} )); then
+    if (( PR[0] > PR[1] )); then
       throw_error "First port in range must be less than last port"
     fi
 
     # for each port in range
-    for ((k=${PR[0]}; k<=${PR[1]}; ++k)); do
+    for ((k=PR[0]; k<=PR[1]; ++k)); do
       # checks
-      if (( $SRC_PORT > $MAX_PORT_NUMBER )) || (( $DST_PORT > $MAX_PORT_NUMBER )); then
+      if (( SRC_PORT > MAX_PORT_NUMBER )) || (( DST_PORT > MAX_PORT_NUMBER )); then
         throw_error "Ports numbers  must be less than $MAX_PORT_NUMBER - $DST_PORT"
       fi
 
@@ -168,18 +168,16 @@ done
 OUTPUT=$CMD
 OUTPUT_CMD="echo -e \"$OUTPUT\""
 
-# filter output
-FILTER=""
-if [ "$HIDE_TUNNELS" -eq "1" ]; then
+if (( HIDE_TUNNELS == 1 )); then
   OUTPUT_CMD="$OUTPUT_CMD| grep -v '\-L\\s'"
 fi
 
 # show output
 if [ "$QUIET" -eq "0" ]; then
-  eval $OUTPUT_CMD
+  eval "$OUTPUT_CMD"
 fi
 
-CMD="$(echo -e $CMD)"
+CMD="$(echo -e "$CMD")"
 if [ "$DRY_MODE" -eq "0" ]; then
   $CMD
 fi
