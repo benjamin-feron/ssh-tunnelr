@@ -76,7 +76,7 @@ throw_error () {
   MSG=$1
   EXIT=$2
   STD_MSG="Command stopped"
-  printf "\033[0;31m%s\033[0m\n" "${MSG}"
+  printf "\033[0;31m%s\033[0m\n" "$MSG"
   echo "$STD_MSG"
   if $EXIT ; then
     exit 1
