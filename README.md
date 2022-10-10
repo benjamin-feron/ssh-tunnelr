@@ -1,4 +1,4 @@
-# ssh-tunnelr
+# <img src="https://github.com/benjamin-feron/ssh-tunnelr/blob/master/images/ssh-tunnelr-logo-small-black-rock.png" width="350" />
 
 ssh-tunnelr is a shell script that offer a simple way to establish a Secure Shell connection
 through multiple hosts to an endpoint.
@@ -28,13 +28,13 @@ $ ssh-tunnelr -t host.domain.com,172.16.1.55,10.3.1.3 80:82
 This will bounce from host to host and forward local ports range up to the endpoint :
 ````
 +----------+       +----------+       +----------+       +----------+
-|   :80    |       |          |       |          |       |    :80   |
-|       \  |       |          |       |          |       |  /       |
-|        \ |       |:22       |       |:22       |       | /        |
+|   :80    |       |          |       |          |       |      :80 |
+|       \  |       |          |       |          |       |     /    |
+|        \ |       |:22       |       |:22       |       |:22 /     |
 |   :81 ---===============================================--- :81   |
-|        / |       |          |       |          |       | \        |
-|       /  |       |          |       |          |       |  \       |
-|   :82    |       |          |       |          |       |    :82   |
+|        / |       |          |       |          |       |    \     |
+|       /  |       |          |       |          |       |     \    |
+|   :82    |       |          |       |          |       |      :82 |
 +----------+       +----------+       +----------+       +----------+
  localhost        host.domain.com      172.16.1.55         10.3.1.3
 ````
@@ -51,7 +51,7 @@ This will bounce from host to host and forward local ports range up to the endpo
 +----------+       +----------+       +----------+       +----------+
  localhost        host.domain.com      172.16.1.55         10.3.1.3
 ````
-Here is the command executed by the script :
+Here is the background command executed by the script :
 ```bash
 ssh -t host.domain.com \
   -L 80:localhost:80 \
@@ -169,6 +169,7 @@ $ ssh-tunnelr -t host1,host2,host3 110:111 7000:7002:80 3306
 ```bash
 $ ssh-tunnelr -t host1:2222,foo@host2,bar@host3:6822 3306
 ````
+Is equivalent to :
 ```bash
 ssh -t -p 2222 host1 \
   -L 3306:localhost:3306 \
@@ -194,7 +195,7 @@ You also can specify password like on ssh command : user:password@host but it's 
 
 ### Connect to the endpoint without forwarding ports
 
-Of course it's possible to simply connect to endpoint without specify any port to forward :
+Of course it's possible to simply connect to endpoint without specifying any port to forward :
 ```bash
 $ ssh-tunnelr -t host1:2222,host2,host3:6822
 ````
@@ -221,7 +222,7 @@ You can pass ssh native options like -X or -t.
 ```bash
 $ ssh-tunnelr -X -t host1,host2,host3 70:71
 ````
-...ssh command becomes :
+...ssh equivalent command :
 ```bash
 ssh -X -t host1 \
   -L 70:localhost:70 \
